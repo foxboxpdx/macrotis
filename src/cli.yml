@@ -1,0 +1,21 @@
+name: Macrotis
+author: FoxBoxPDX <foxboxpdx@gmail.com>
+about: Manage Cloud-based DNS through TinyDNS flat files
+args:
+    - input:
+        short: i
+        long: input
+        value_name: FILE/DIR
+        help: "Read TinyDNS input data from FILE or all *.tiny files in DIR"
+        takes_value: true
+        required: true
+    - lint:
+        short: l
+        long: lint
+        help: "Validate input file(s) only, then exit"
+    - config:
+        short: c
+        long: config
+        value_name: FILE
+        help: "JSON-formatted configuration file (default: macrotis.conf)"
+        takes_value: true

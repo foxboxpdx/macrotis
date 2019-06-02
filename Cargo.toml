@@ -1,0 +1,23 @@
+[package]
+name = "macrotis"
+version = "0.1.0"
+authors = ["FoxBoxPDX <foxboxpdx@gmail.com>"]
+description = "Manage cloud-based DNS services via TinyDNS zone files"
+publish = false
+license = "Apache 2.0"
+
+[dependencies]
+rusoto_core    = "0.38.0"
+rusoto_route53 = "0.38.0"
+rusoto_s3      = "0.38.0"
+rusoto_sts     = "0.38.0"
+serde          = "1.0"
+serde_derive   = "1.0"
+serde_json     = "1.0"
+clap = {version = "~2.32.0", features = ["yaml"]}
+
+[package.metadata.rpm.cargo]
+buildflags = ["--release"]
+
+[package.metadata.rpm.targets]
+macrotis = { path = "/usr/local/bin/macrotis" }
