@@ -1,6 +1,6 @@
 [package]
 name = "macrotis"
-version = "0.1.0"
+version = "0.7.1"
 authors = ["FoxBoxPDX <foxboxpdx@gmail.com>"]
 description = "Manage cloud-based DNS services via TinyDNS zone files"
 publish = false
