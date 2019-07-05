@@ -1,6 +1,6 @@
 [package]
 name = "macrotis"
-version = "0.7.1"
+version = "0.6.22"
 authors = ["FoxBoxPDX <foxboxpdx@gmail.com>"]
 description = "Manage cloud-based DNS services via TinyDNS zone files"
 publish = false
@@ -14,7 +14,7 @@ rusoto_sts     = "0.38.0"
 serde          = "1.0"
 serde_derive   = "1.0"
 serde_json     = "1.0"
-clap = {version = "~2.32.0", features = ["yaml"]}
+clap = {version = "~2.33.0", features = ["yaml"]}
 
 [package.metadata.rpm.cargo]
 buildflags = ["--release"]
