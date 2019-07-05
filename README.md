@@ -2,8 +2,12 @@
 Stateful Bulk Route53 DNS Management via TinyDNS
 
 ## Usage
-`Usage goes here`
+`macrotis --input <FILE/DIR> --config <FILE> [SUBCOMMAND]`
 
+### Subcommands
+`execute` - Calculate changes to be made and send them to Route53
+`noop` - Calculate changes and print them out, but do not send to R53
+`lint` - Validate the input file(s) only and exit
 
 ## About
 Macrotis aims to provide what the Terraform AWS module is missing - the ability
@@ -42,7 +46,35 @@ By default, Macrotis looks for a file called `macrotis.conf` in the working
 directory.  It is in JSON format and looks like so:
 
 ```json
-JSON goes here
+{
+    "provider": {
+        "name": (String) A name for the Route53 Provider,
+        "region": (String) Region for Route53 Zones,
+        "assume_role": (bool) Whether or not to assume a role,
+        "role_arn": (String) An IAM ARN for the role to assume
+        "session_name": (String) An optional session name
+    },
+    "statefile": {
+        "backend": (String) "s3" or "local",
+        "filename": (String) A filename for local statefile storage,
+        "bucket": (String) A bucket to store the state in,
+        "key": (String) The key within the bucket the file will be stored as,
+        "region": (String) Region for S3 bucket
+        "tags": {
+          (String): (String),
+          optional: tags for tagging the S3 bucket/key
+          },
+        "role_arn": (String) An IAM ARN if a role will be assumed for S3
+        "session_name": (String) An optional session name
+    },
+    "zones": [
+        {
+            "name": (String) Friendly name for the zone for logging,
+            "domain": (String) The domain name for the zone (ie 'domain.com')
+            "id": (String) AWS R53 Zone_ID for the zone
+        }
+    ]
+}
 ```
 
 ### Authentication
@@ -83,4 +115,4 @@ No you don't, stop lying.
   * s3:PutObject on `arn:aws:s3:::<bucket>`
 
 ##### Last Updated
-9-June-2019
+4-July-2019
