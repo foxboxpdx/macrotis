@@ -5,9 +5,9 @@ Stateful Bulk Route53 DNS Management via TinyDNS
 `macrotis --input <FILE/DIR> --config <FILE> [SUBCOMMAND]`
 
 ### Subcommands
-`execute` - Calculate changes to be made and send them to Route53
-`noop` - Calculate changes and print them out, but do not send to R53
-`lint` - Validate the input file(s) only and exit
+* `execute` - Calculate changes to be made and send them to Route53
+* `noop` - Calculate changes and print them out, but do not send to R53
+* `lint` - Validate the input file(s) only and exit
 
 ## About
 Macrotis aims to provide what the Terraform AWS module is missing - the ability
@@ -45,7 +45,7 @@ Because Go sucks. Don't @ me.
 By default, Macrotis looks for a file called `macrotis.conf` in the working
 directory.  It is in JSON format and looks like so:
 
-```json
+```
 {
     "provider": {
         "name": (String) A name for the Route53 Provider,
