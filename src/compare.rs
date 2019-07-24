@@ -32,32 +32,23 @@ pub fn state_remote(st: &mut ResHash, re: &ResHash) {
 // Compare records from a statefile with records processed from local
 // files.  Separate into three new ResHashes, containing NEW, UPDATED,
 // and DELETED records.
-pub fn local_state(lo: ResHash, st: ResHash) -> (ResHash, ResHash, ResHash) {
+pub fn local_state(lo: &ResHash, st: &ResHash) -> (ResHash, ResHash, ResHash) {
 	let (mut n, mut u, mut d) = (HashMap::new(), HashMap::new(), HashMap::new());
-	let st_hash = st.0;
-	let lo_hash = lo.0;
-	for (key, rec) in lo_hash.clone() {
-		if st_hash.contains_key(&key) {
-			let state_rec = st_hash.get(&key).unwrap();
-			if state_rec != &rec {
-				u.insert(key.to_string(), rec);
-			}
-		} else {
-			n.insert(key.to_string(), rec);
-		}
+	let st_hash = &st.0;
+	let lo_hash = &lo.0;
+	for (key, rec) in lo_hash {
+        match st_hash.get(key) {
+            Some(x) => { if x != rec { u.insert(key.clone(), x.clone()); },
+            None => n.insert(key.clone(), x.clone())
+        }
 	}
 	for (key, rec) in st_hash {
-		if !lo_hash.contains_key(&key) {
+		if !lo_hash.contains_key(key) {
 			// We need to clone 'rec' so 'd' can take ownership of it
-			let x = Resource { zone_id: rec.zone_id.to_string(),
-				name: rec.name.to_string(),
-				rtype: rec.rtype.to_string(),
-				ttl: rec.ttl,
-				records: rec.records.clone() };
-			d.insert(key.to_string(), x);
+			d.insert(key.clone(), rec.clone());
 		}
 	}
-	(ResHash {0:n}, ResHash {0:u}, ResHash {0:d})
+	(ResHash (n), ResHash (u), ResHash (d))
 }
 
 // Compare records determined to be 'NEW' with the records retrieved

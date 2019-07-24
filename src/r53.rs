@@ -93,7 +93,7 @@ pub fn bulk_fetch(conf: &MacrotisProviderConfig, zone_id: &str) -> Option<Vec<Re
   
 // Given Provider metadata, a zone_id, and a vector of changes to push,
 // generate a number of Route53 requests and push everything up there.
-pub fn bulk_put(conf: &MacrotisProviderConfig, records: &mut Vec<Change>, zone_id: &str) -> Result<String, String> {
+pub fn bulk_put(conf: &MacrotisProviderConfig, mut records: Vec<Change>, zone_id: &str) -> Result<String, String> {
     // Build the client
     let client = match build_client(&conf) {
         Some(x) => x,
@@ -107,11 +107,8 @@ pub fn bulk_put(conf: &MacrotisProviderConfig, records: &mut Vec<Change>, zone_i
     // a number larger than vec.len so do some checking there first.
     loop {
 		let c = records.len();
-		let slice = match c > 99 {
-			true => records.split_off(99),
-			false => records.split_off(c)
-		};
-		let batch = ChangeBatch { changes: slice, comment: None };
+        let chunk = records.split_off(std::cmp::min(c, 99));
+		let batch = ChangeBatch { changes: chunk, comment: None };
 		let req = ChangeResourceRecordSetsRequest {
 			change_batch: batch,
 			hosted_zone_id: zone_id.to_string()

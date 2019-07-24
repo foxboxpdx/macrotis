@@ -93,7 +93,7 @@ fn main() {
 
     // Compare local records with updated statefile records to see what changes
     // need to be sent to remote.
-    let (mut new_recs, mut upd_recs, del_recs) = compare::local_state(local_recs.clone(), state_recs.clone());
+    let (mut new_recs, mut upd_recs, del_recs) = compare::local_state(&local_recs, &state_recs);
 
     // Compare the 'new' change set to the remote records, since it contains
     // records the statefile is unaware of but which might already exist
@@ -305,20 +305,16 @@ fn push_remote(config: &MacrotisConfig, resources: &HashMap<&str,Vec<Resource>>)
 	// something that goes...a little bit a-like a-dis:
 	for (action, res) in resources {
 		for rec in res {
-			let z = &rec.zone_id;
+			let z = &rec.zone_id[..];
 			let chg = r53::resource_to_change(&action, &rec);
-			if by_zone.contains_key::<str>(&z) {
-				by_zone.get_mut::<str>(&z).unwrap().push(chg);
-			} else {
-				by_zone.insert(&z, vec![chg]);
-			}
+            by_zone.entry(z.clone()).or_insert(vec![]).push(chg);
 		}
 	}
 	
 	// Now iterate through that by_zone hashmap and call bulk_put for
 	// each one.
 	for (zoneid, chgvec) in by_zone {
-		match r53::bulk_put(&prov, &mut chgvec.clone(), &zoneid) {
+		match r53::bulk_put(&prov, chgvec, &zoneid) {
 			Ok(x) => { println!("Change IDs: {}", x); },
 			Err(e) => { println!("Error! {}", e); retval = false; }
 		};
